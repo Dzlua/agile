@@ -3,17 +3,14 @@
   Use of this source code is governed by a BSD-style license that can be
   found in the LICENSE file.
 
-* Author:         dzlua - https://github.com/dzlua/
+* Author:         dzlua - https://gitee.com/dzlua/
 * Email:          505544956@qq.com
-* FileName:       agile.h
-* Create Time:    2019/05/10 15:46:47
+* FileName:       base.cc
+* Create Time:    2019/06/11 15:02:03
 * Description:    /
 \****************************************************/
-#ifndef __AGILE_AGILE_H_
-#define __AGILE_AGILE_H_
+#include <agile/base.hpp>
 
-#include "export.h"
-#include "base.h"
-#include "target.h"
-
-#endif // __AGILE_AGILE_H_
+int main(int argc, char **argv) {
+  return 0;
+}

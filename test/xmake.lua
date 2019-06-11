@@ -1,12 +1,8 @@
-target("test1")
-  set_kind("binary")
+target("base")
+  add_includedirs("..")
 
-  -- 添加依赖目标
-  add_deps("agile")
-  add_links("agile")
-  add_linkdirs("$(buildir)")
-  add_includedirs("../src")
+  set_kind("binary")
   
-  add_files("test1.cc")
+  add_files("base.cc")
 
 target_end()
