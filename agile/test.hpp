@@ -26,7 +26,7 @@ struct __print_total_info {
   ~__print_total_info();
 };
 
-static float g_eqf_range = 0.01f;
+static float g_eqf_range = 0.001f;
 static const char *g_test_name = "";
 static int g_err_counts = 0;
 static int g_pass_counts = 0;

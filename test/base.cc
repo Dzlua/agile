@@ -38,14 +38,7 @@ void test_radian_degrees() {
   AG_TEST_END();
 }
 
-void test() {
-  AG_TEST_BEGIN("test");
-  AG_TEST_EQ(-1, 1);
-  AG_TEST_END();
-}
-
 int main(int argc, char **argv) {
   test_radian_degrees();
-  test();
   return 0;
 }
