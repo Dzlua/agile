@@ -10,11 +10,10 @@
 * Description:    /
 \****************************************************/
 #include <agile/base.hpp>
-#include "test.h"
+#include <agile/test.hpp>
 
 void test_radian_degrees() {
-  ag_test_begin("radian_degrees");
-
+  AG_TEST_BEGIN("base::to_radian");
   AG_TEST_EQf(0.f, agile::base::to_radian(0));
   AG_TEST_EQf(0.7853982f, agile::base::to_radian(45));
   AG_TEST_EQf(1.5707964f, agile::base::to_radian(90));
@@ -24,7 +23,9 @@ void test_radian_degrees() {
   AG_TEST_EQf(4.7123891f, agile::base::to_radian(270));
   AG_TEST_EQf(5.4977873f, agile::base::to_radian(315));
   AG_TEST_EQf(6.2831855f, agile::base::to_radian(360));
+  AG_TEST_END();
 
+  AG_TEST_BEGIN("base::to_degrees");
   AG_TEST_EQf(0, agile::base::to_degrees(0.f));
   AG_TEST_EQf(45, agile::base::to_degrees(0.7853982f));
   AG_TEST_EQf(90, agile::base::to_degrees(1.5707964f));
@@ -34,14 +35,13 @@ void test_radian_degrees() {
   AG_TEST_EQf(270, agile::base::to_degrees(4.7123891f));
   AG_TEST_EQf(315, agile::base::to_degrees(5.4977873f));
   AG_TEST_EQf(360, agile::base::to_degrees(6.2831855f));
-
-  ag_test_end();
+  AG_TEST_END();
 }
 
 void test() {
-  ag_test_begin("test");
+  AG_TEST_BEGIN("test");
   AG_TEST_EQ(-1, 1);
-  ag_test_end();
+  AG_TEST_END();
 }
 
 int main(int argc, char **argv) {
