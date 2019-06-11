@@ -40,9 +40,27 @@ void _set_color(unsigned short color) {
       printf("/033[1;40;%dm",color);
   #endif
 }
-void _color_red() { _set_color(4); }
-void _color_green() { _set_color(2); }
-void _color_default() { _set_color(7); }
+void _color_red() {
+  #ifdef _MSC_VER
+    _set_color(4);
+  #else
+    _set_color(31);
+  #endif
+}
+void _color_green() {
+  #ifdef _MSC_VER
+    _set_color(2);
+  #else
+    _set_color(32);
+  #endif
+}
+void _color_default() {
+  #ifdef _MSC_VER
+    _set_color(7);
+  #else
+    _set_color(30;
+  #endif
+}
 
 static inline void _test_assert(float exp, int tp, const char *file, int line, const char *msg) {
   bool bexp = false;
