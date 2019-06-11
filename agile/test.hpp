@@ -19,6 +19,21 @@
 #include <windows.h>
 #endif
 
+namespace agile {
+namespace test {
+
+enum class __color : unsigned short {
+  #ifdef _MSC_VER
+    kGreen = 2,
+    kRed = 4,
+    kDefault = 7,
+  #else
+    kDefault = 30,
+    kRed = 31,
+    kGreen = 32,
+  #endif
+};
+
 struct __print_info {
   int failed;
   int passed;
@@ -32,32 +47,12 @@ struct __print_info {
 
 __print_info g_info;
 
-void _set_color(unsigned short color) {
+void _set_color(__color color) {
+  auto col = static_cast<unsigned short>(color);
   #ifdef _MSC_VER
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), col);
   #else
-      printf("/033[1;40;%dm",color);
-  #endif
-}
-void _color_red() {
-  #ifdef _MSC_VER
-    _set_color(4);
-  #else
-    _set_color(31);
-  #endif
-}
-void _color_green() {
-  #ifdef _MSC_VER
-    _set_color(2);
-  #else
-    _set_color(32);
-  #endif
-}
-void _color_default() {
-  #ifdef _MSC_VER
-    _set_color(7);
-  #else
-    _set_color(30;
+      printf("/033[1;40;%dm",col);
   #endif
 }
 
@@ -75,15 +70,15 @@ static inline void _test_assert(float exp, int tp, const char *file, int line, c
 
   if (!bexp) {
     ++g_info.err_counts;
-    _color_red();
+    _set_color(__color::kRed);
     printf("failed: ");
   } else {
     ++g_info.pass_counts;
-    _color_green();
+    _set_color(__color::kGreen);
     printf("passed: ");
   }
 
-  _color_default();
+  _set_color(__color::kDefault);
   printf("%s in %s:%d\n", msg, file, line);
 }
 
@@ -106,23 +101,23 @@ static void _test_begin(const char *name) {
 static void _test_end() {
   if (g_info.err_counts == 0) {
     g_info.passed++;
-    _color_green();
+    _set_color(__color::kGreen);
     printf("\nPASSED! ");
   } else {
     g_info.failed++;
-    _color_red();
+    _set_color(__color::kRed);
     printf("\nFAILED! ");
   }
 
-  _color_default();
+  _set_color(__color::kDefault);
   printf("failed: ");
-  _color_red();
+  _set_color(__color::kRed);
   printf("%d", g_info.err_counts);
-  _color_default();
+  _set_color(__color::kDefault);
   printf(", passed: ");
-  _color_green();
+  _set_color(__color::kGreen);
   printf("%d", g_info.pass_counts);
-  _color_default();
+  _set_color(__color::kDefault);
   printf(", count: %d\n"
     , g_info.err_counts + g_info.pass_counts);
 }
@@ -133,34 +128,37 @@ __print_info::__print_info()
 __print_info::~__print_info() {
   printf("\n----- Summary -----\n");
   printf("failed tests: ");
-  _color_red();
+  _set_color(__color::kRed);
   printf("%d", failed);
-  _color_default();
+  _set_color(__color::kDefault);
   printf("\npassed tests: ");
-  _color_green();
+  _set_color(__color::kGreen);
   printf("%d", passed);
-  _color_default();
+  _set_color(__color::kDefault);
   printf("\ntotal  tests: %d\n"
     , failed + passed);
 
   if (failed == 0) {
-    _color_green();
+    _set_color(__color::kGreen);
     printf("PASSED! ");
   } else {
-    _color_red();
+    _set_color(__color::kRed);
     printf("FAILED! ");
   }
 
-  _color_default();
+  _set_color(__color::kDefault);
 }
 
-#define AG_TEST_BEGIN(name) { _test_begin(name); }
-#define AG_TEST_END() { _test_end(); }
-#define AG_TEST_SET_EQf(range) { _set_eqf(range); }
+#define AG_TEST_BEGIN(name) { agile::test::_test_begin(name); }
+#define AG_TEST_END() { agile::test::_test_end(); }
+#define AG_TEST_SET_EQf(range) { agile::test::_set_eqf(range); }
 
-#define AG_TEST_EQ(l,r) { _test_assert((l) - (r), 0, __FILE__, __LINE__, "AG_TEST_EQ("#l","#r")"); }
-#define AG_TEST_NEQ(l,r) { _test_assert((l) - (r), 0, __FILE__, __LINE__, "AG_TEST_NEQ("#l","#r")"); }
-#define AG_TEST_EQf(l,r) { _test_assert((l) - (r), 1, __FILE__, __LINE__, "AG_TEST_EQf("#l","#r")"); }
-#define AG_TEST_NEQf(l,r) { _test_assert((l) - (r), -1, __FILE__, __LINE__, "AG_TEST_NEQf("#l","#r")"); }
+#define AG_TEST_EQ(l,r) { agile::test::_test_assert((l) - (r), 0, __FILE__, __LINE__, "AG_TEST_EQ("#l","#r")"); }
+#define AG_TEST_NEQ(l,r) { agile::test::_test_assert((l) - (r), 0, __FILE__, __LINE__, "AG_TEST_NEQ("#l","#r")"); }
+#define AG_TEST_EQf(l,r) { agile::test::_test_assert((l) - (r), 1, __FILE__, __LINE__, "AG_TEST_EQf("#l","#r")"); }
+#define AG_TEST_NEQf(l,r) { agile::test::_test_assert((l) - (r), -1, __FILE__, __LINE__, "AG_TEST_NEQf("#l","#r")"); }
+
+} // end namespace test
+} // end namespace agile
 
 #endif // end define AG_TEST_HPP_
