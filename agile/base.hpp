@@ -13,7 +13,15 @@
 #define AGILE_MATH_HPP_
 
 namespace agile {
+namespace base {
+  static inline float to_radian(float angle) {
+		return angle * 0.0174532925f;
+	}
 
+	static inline float to_degrees(float radian) {
+		return radian * 57.29577951f;
+	}
+} // end namespace base
 } // end namespace agile
 
 #endif // end define AGILE_MATH_HPP_
