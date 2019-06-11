@@ -19,19 +19,18 @@
 #include <windows.h>
 #endif
 
-struct __print_total_info {
+struct __print_info {
   int failed;
   int passed;
-  __print_total_info();
-  ~__print_total_info();
+  float eqf_range;
+  const char *test_name;
+  int err_counts;
+  int pass_counts;
+  __print_info();
+  ~__print_info();
 };
 
-static float g_eqf_range = 0.001f;
-static const char *g_test_name = "";
-static int g_err_counts = 0;
-static int g_pass_counts = 0;
-
-__print_total_info g_total_info;
+__print_info g_info;
 
 void _set_color(unsigned short color) {
   #ifdef _MSC_VER
@@ -67,19 +66,19 @@ static inline void _test_assert(float exp, int tp, const char *file, int line, c
   if (tp == 0) {
     bexp = exp == 0.f;
   } else if (tp > 0) {
-    if (exp < g_eqf_range && exp > -g_eqf_range)
+    if (exp < g_info.eqf_range && exp > -g_info.eqf_range)
       bexp = true;
   } else if (tp < 0) {
-    if (exp > g_eqf_range || exp < -g_eqf_range)
+    if (exp > g_info.eqf_range || exp < -g_info.eqf_range)
       bexp = true;
   }
 
   if (!bexp) {
-    ++g_err_counts;
+    ++g_info.err_counts;
     _color_red();
     printf("failed: ");
   } else {
-    ++g_pass_counts;
+    ++g_info.pass_counts;
     _color_green();
     printf("passed: ");
   }
@@ -90,27 +89,27 @@ static inline void _test_assert(float exp, int tp, const char *file, int line, c
 
 static inline void _set_eqf(float range) {
   if (range < 0.f) {
-    g_eqf_range = -range;
+    g_info.eqf_range = -range;
   } else {
-    g_eqf_range = range;
+    g_info.eqf_range = range;
   }
 }
 
 static void _test_begin(const char *name) {
-  g_test_name = name;
-  g_err_counts = 0;
-  g_pass_counts = 0;
+  g_info.test_name = name;
+  g_info.err_counts = 0;
+  g_info.pass_counts = 0;
   printf("----- %d -----\n"
-    , g_total_info.passed + g_total_info.failed + 1);
-  printf("Begin %s\n", g_test_name);
+    , g_info.passed + g_info.failed + 1);
+  printf("Begin %s\n", g_info.test_name);
 }
 static void _test_end() {
-  if (g_err_counts == 0) {
-    g_total_info.passed++;
+  if (g_info.err_counts == 0) {
+    g_info.passed++;
     _color_green();
     printf("\nPASSED! ");
   } else {
-    g_total_info.failed++;
+    g_info.failed++;
     _color_red();
     printf("\nFAILED! ");
   }
@@ -118,18 +117,20 @@ static void _test_end() {
   _color_default();
   printf("failed: ");
   _color_red();
-  printf("%d", g_err_counts);
+  printf("%d", g_info.err_counts);
   _color_default();
   printf(", passed: ");
   _color_green();
-  printf("%d", g_pass_counts);
+  printf("%d", g_info.pass_counts);
   _color_default();
   printf(", count: %d\n"
-    , g_err_counts + g_pass_counts);
+    , g_info.err_counts + g_info.pass_counts);
 }
 
-__print_total_info::__print_total_info() : failed(0), passed(0) {}
-__print_total_info::~__print_total_info() {
+__print_info::__print_info()
+  : failed(0), passed(0), eqf_range(0.001f)
+  , test_name(""), err_counts(0), pass_counts(0) {}
+__print_info::~__print_info() {
   printf("\n----- Summary -----\n");
   printf("failed tests: ");
   _color_red();
