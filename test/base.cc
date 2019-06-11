@@ -13,6 +13,8 @@
 #include <agile/test.hpp>
 
 void test_radian_degrees() {
+  AG_TEST_SET_EQf(0.000001);
+
   AG_TEST_BEGIN("base::to_radian");
   AG_TEST_EQf(0.f, agile::base::to_radian(0));
   AG_TEST_EQf(0.7853982f, agile::base::to_radian(45));
@@ -25,6 +27,7 @@ void test_radian_degrees() {
   AG_TEST_EQf(6.2831855f, agile::base::to_radian(360));
   AG_TEST_END();
 
+  AG_TEST_SET_EQf(0.01);
   AG_TEST_BEGIN("base::to_degrees");
   AG_TEST_EQf(0, agile::base::to_degrees(0.f));
   AG_TEST_EQf(45, agile::base::to_degrees(0.7853982f));

@@ -116,16 +116,30 @@ static void _test_end() {
   }
 
   _color_default();
-  printf("failed: %d, passed: %d, count: %d\n"
-    , g_err_counts, g_pass_counts
+  printf("failed: ");
+  _color_red();
+  printf("%d", g_err_counts);
+  _color_default();
+  printf(", passed: ");
+  _color_green();
+  printf("%d", g_pass_counts);
+  _color_default();
+  printf(", count: %d\n"
     , g_err_counts + g_pass_counts);
 }
 
 __print_total_info::__print_total_info() : failed(0), passed(0) {}
 __print_total_info::~__print_total_info() {
   printf("\n----- Summary -----\n");
-  printf("failed tests: %d\npassed tests: %d\ntotal  tests: %d\n"
-    , failed, passed
+  printf("failed tests: ");
+  _color_red();
+  printf("%d", failed);
+  _color_default();
+  printf("\npassed tests: ");
+  _color_green();
+  printf("%d", passed);
+  _color_default();
+  printf("\ntotal  tests: %d\n"
     , failed + passed);
 
   if (failed == 0) {
@@ -145,7 +159,7 @@ __print_total_info::~__print_total_info() {
 
 #define AG_TEST_EQ(l,r) { _test_assert((l) - (r), 0, __FILE__, __LINE__, "AG_TEST_EQ("#l","#r")"); }
 #define AG_TEST_NEQ(l,r) { _test_assert((l) - (r), 0, __FILE__, __LINE__, "AG_TEST_NEQ("#l","#r")"); }
-#define AG_TEST_EQf(l,r) { _test_assert((l) - (r), 1, __FILE__, __LINE__, "AG_TEST_EQ("#l","#r")"); }
-#define AG_TEST_NEQf(l,r) { _test_assert((l) - (r), -1, __FILE__, __LINE__, "AG_TEST_NEQ("#l","#r")"); }
+#define AG_TEST_EQf(l,r) { _test_assert((l) - (r), 1, __FILE__, __LINE__, "AG_TEST_EQf("#l","#r")"); }
+#define AG_TEST_NEQf(l,r) { _test_assert((l) - (r), -1, __FILE__, __LINE__, "AG_TEST_NEQf("#l","#r")"); }
 
 #endif // end define AG_TEST_HPP_
