@@ -41,12 +41,18 @@ namespace console {
         void set_color(const char *bkcolor, int bklen, const char *fgcolor, int fglen) {
           unsigned short color = 0;
 
-          if (strncmp("red", fgcolor, fglen) == 0) {
-            color |= FOREGROUND_RED;
-          } else if (strncmp("green", fgcolor, fglen) == 0) {
-            color |= FOREGROUND_GREEN;
+          if (strncmp("black", fgcolor, fglen) == 0) {
+            color |= 0;
           } else if (strncmp("blue", fgcolor, fglen) == 0) {
-            color |= FOREGROUND_BLUE;
+            color |= 1;
+          } else if (strncmp("green", fgcolor, fglen) == 0) {
+            color |= 2;
+          } else if (strncmp("cyan", fgcolor, fglen) == 0) {
+            color |= 3;
+          } else if (strncmp("red", fgcolor, fglen) == 0) {
+            color |= 4;
+          } else if (strncmp("white", fgcolor, fglen) == 0) {
+            color |= 7;
           }
 
           set_color(color);
@@ -65,12 +71,18 @@ namespace console {
         void set_color(const char *bkcolor, int bklen, const char *fgcolor, int fglen) {
           unsigned short color = 0;
 
-          if (strncmp("red", fgcolor, fglen) == 0) {
+          if (strncmp("black", fgcolor, fglen) == 0) {
+            color |= 30;
+          } else if (strncmp("red", fgcolor, fglen) == 0) {
             color |= 31;
           } else if (strncmp("green", fgcolor, fglen) == 0) {
             color |= 32;
           } else if (strncmp("blue", fgcolor, fglen) == 0) {
             color |= 34;
+          } else if (strncmp("cyan", fgcolor, fglen) == 0) {
+            color |= 36;
+          } else if (strncmp("white", fgcolor, fglen) == 0) {
+            color |= 37;
           }
 
           set_color(color);
@@ -81,13 +93,18 @@ namespace console {
       };
     #endif
     static __sinit sinit_;
+    static const char *default_color_ = nullptr;
 
     static inline void set_color(const char *bkcolor, int bklen, const char *fgcolor, int fglen) {
       if ( (bkcolor && bklen > 0) || (fgcolor && fglen > 0) )
         sinit_.set_color(bkcolor, bklen, fgcolor, fglen);      
     }
     static inline void set_color_default() {
-      sinit_.rset_color();
+      if (default_color_) {
+        sinit_.set_color(nullptr, 0, default_color_, ::strlen(default_color_));
+      } else {
+        sinit_.rset_color();
+      }
     }
 
     void print_color(const char *msg) {
@@ -147,6 +164,16 @@ namespace console {
       set_color_default();
     }
   } // end namespace __detail
+
+  void set_default_color(const char *color) {
+    __detail::default_color_ = color;
+    __detail::set_color_default();
+  }
+
+  void rset_default_color() {
+    __detail::default_color_ = nullptr;
+    __detail::set_color_default();
+  }
 
   /*
     such as:
