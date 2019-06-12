@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
+
 #include <mutex>
 
 #ifdef I_OS_WIN
@@ -198,6 +199,45 @@ namespace console {
     __detail::print(fmt, arg);
     va_end(arg);
     ::printf("\n");
+  }
+
+  /*
+    log to file
+  */
+  void log(const char *fmt, ...) {
+    static char msg[2048];
+    static char logfn[512] = {0};
+   	static char *extname = ".log";
+
+    static std::mutex mtx;
+
+    std::lock_guard<std::mutex> lock(mtx);
+
+    va_list arg;
+    va_start(arg, fmt);
+    vsnprintf(msg, 2048, fmt, arg);
+	  msg[2047] = '\0';
+    va_end(arg);
+
+    if (!logfn[0]) {
+      #ifdef I_OS_WIN
+        if (!GetModuleFileNameA(GetModuleHandleA(0), logfn
+          , (DWORD)(sizeof(logfn) - (strlen(extname) + 1))) ) {
+          return;
+        }
+        if (!logfn[0]) {
+          return;
+        }
+      #else
+      #endif
+      strcat(logfn, extname);
+    }
+
+    FILE *fp = ::fopen(logfn, "a+");
+    if (fp) {
+      ::fprintf(fp, "[time] %s\n", msg);
+      ::fclose(fp);
+    }
   }
 } // end namespace test
 } // end namespace console

@@ -23,12 +23,15 @@ void test_console() {
 
 void test_thread() {
   agile::console::print("----- test thread -----");
+  agile::console::log("----- test thread -----");
   auto fun = [] (int id) {
     for (int i = 0; i < 10; ++i) {
       agile::console::print("thread {blue:%d} is running...", id);
+      agile::console::log("thread %d is running...", id);
       std::this_thread::sleep_for(std::chrono::microseconds(10));
     }
     agile::console::print("thread {blue:%d} is ended.", id);
+    agile::console::log("thread %d is ended.", id);
   };
 
   std::thread td1(fun, 1);
@@ -37,8 +40,26 @@ void test_thread() {
   td2.join();
 }
 
+void test_log() {
+  agile::console::print("----- test log -----");
+
+  const char *msg = "hello";
+  agile::console::print(msg);
+  agile::console::log(msg);
+
+  msg = "this is a %s %d";
+  agile::console::print(msg, "test", 1);
+  agile::console::log(msg, "test", 1);
+
+  msg = "this is a %s %d";
+  agile::console::print(msg, "ok", 2);
+  agile::console::log(msg, "ok", 2);
+}
+
 int main(int argc, char **argv) {
+  agile::console::print(argv[0]);
     test_console();
     test_thread();
+    test_log();
     return 0;
 }
