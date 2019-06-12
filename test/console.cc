@@ -10,8 +10,10 @@
 * Description:    /
 \****************************************************/
 #include <agile/console.hpp>
+#include <thread>
 
 void test_console() {
+  agile::console::print("----- test console -----");
   agile::console::print("first {green:green} print");
   agile::console::print("second {red:red} print");
   agile::console::printf("third {blue:blue} printf");
@@ -19,7 +21,24 @@ void test_console() {
   agile::console::print("this {red:is} a {green:color} {blue:text}!");
 }
 
+void test_thread() {
+  agile::console::print("----- test thread -----");
+  auto fun = [] (int id) {
+    for (int i = 0; i < 10; ++i) {
+      agile::console::print("thread {blue:%d} is running...", id);
+      std::this_thread::sleep_for(std::chrono::microseconds(10));
+    }
+    agile::console::print("thread {blue:%d} is ended.", id);
+  };
+
+  std::thread td1(fun, 1);
+  std::thread td2(fun, 2);
+  td1.join();
+  td2.join();
+}
+
 int main(int argc, char **argv) {
     test_console();
+    test_thread();
     return 0;
 }

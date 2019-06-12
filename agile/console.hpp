@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
+#include <mutex>
 
 #ifdef I_OS_WIN
 #include <windows.h>
@@ -158,6 +159,10 @@ namespace console {
     }
     void print(const char *fmt, va_list arg) {
       static char msg[2048];
+      static std::mutex mtx;
+
+      std::lock_guard<std::mutex> lock(mtx);
+
 	    vsnprintf(msg, 2048, fmt, arg);
 	    msg[2047] = '\0';
       print_color(msg);
