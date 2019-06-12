@@ -36,7 +36,7 @@ namespace console {
         }
         ~__sinit() {}
         void set_color(unsigned short color) {
-          ::SetConsoleTextAttribute(::GetStdHandle(STD_OUTPUT_HANDLE), color);
+          ::SetConsoleTextAttribute(::GetStdHandle(STD_OUTPUT_HANDLE), color | FOREGROUND_INTENSITY);
         }
         void set_color(const char *bkcolor, int bklen, const char *fgcolor, int fglen) {
           unsigned short color = 0;
@@ -60,7 +60,7 @@ namespace console {
         __sinit() {}
         ~__sinit() {}
         void set_color(unsigned short color) {
-          printf("\033[%dm",color);
+          printf("\033[1m\033[%dm",color);
         }
         void set_color(const char *bkcolor, int bklen, const char *fgcolor, int fglen) {
           unsigned short color = 0;
