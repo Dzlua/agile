@@ -16,6 +16,7 @@
 
 #include <stdio.h>
 #include <stdarg.h>
+#include <string.h>
 
 #ifdef I_OS_WIN
 #include <windows.h>

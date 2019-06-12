@@ -2,7 +2,7 @@ target("console")
   set_languages("cxx11")
   
   add_includedirs("..")
-  add_includedirs("../third/OsPlatformUtil/src")
+  add_includedirs("../third/OSPlatformUtil/src")
 
   set_kind("binary")
   
@@ -14,7 +14,7 @@ target("base")
   set_languages("cxx11")
 
   add_includedirs("..")
-  add_includedirs("../third/OsPlatformUtil/src")
+  add_includedirs("../third/OSPlatformUtil/src")
 
   set_kind("binary")
   
