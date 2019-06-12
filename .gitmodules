@@ -1,0 +1,3 @@
+[submodule "third/OSPlatformUtil"]
+	path = third/OSPlatformUtil
+	url = https://github.com/Dzlua/OSPlatformUtil.git
