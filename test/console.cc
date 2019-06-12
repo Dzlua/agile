@@ -12,12 +12,10 @@
 #include <agile/console.hpp>
 
 void test_console() {
-  agile::console::print("first {red,green:red:green} print");
-  agile::console::print("second {green:green} print");
-  agile::console::printf("first {red:red} printf");
-  agile::console::printf("{red:second printf}");
+  agile::console::print("first {green:green} print");
+  agile::console::print("second {red:red} print");
+  agile::console::printf("third {blue:blue} printf");
   agile::console::print("");
-  agile::console::print("a{default,red:color text color {{red}}}b");
   agile::console::print("this {red:is} a {green:color} {blue:text}!");
 }
 

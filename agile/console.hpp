@@ -38,14 +38,18 @@ namespace console {
         void set_color(unsigned short color) {
           ::SetConsoleTextAttribute(::GetStdHandle(STD_OUTPUT_HANDLE), color);
         }
-        void set_color(const char *color, int len, bool is_fg) {
-          if (strncmp("red", color, len) == 0) {
-            is_fg ? set_color(FOREGROUND_RED) : set_color(BACKGROUND_RED);
-          } else if (strncmp("green", color, len) == 0) {
-            is_fg ? set_color(FOREGROUND_GREEN) : set_color(BACKGROUND_GREEN);
-          } else if (strncmp("blue", color, len) == 0) {
-            is_fg ? set_color(FOREGROUND_BLUE) : set_color(BACKGROUND_BLUE);
+        void set_color(const char *bkcolor, int bklen, const char *fgcolor, int fglen) {
+          unsigned short color = 0;
+
+          if (strncmp("red", fgcolor, fglen) == 0) {
+            color |= FOREGROUND_RED;
+          } else if (strncmp("green", fgcolor, fglen) == 0) {
+            color |= FOREGROUND_GREEN;
+          } else if (strncmp("blue", fgcolor, fglen) == 0) {
+            color |= FOREGROUND_BLUE;
           }
+
+          set_color(color);
         }
         void rset_color() {
           ::SetConsoleTextAttribute(::GetStdHandle(STD_OUTPUT_HANDLE), oldattr);
@@ -58,14 +62,18 @@ namespace console {
         void set_color(unsigned short color) {
           printf("\033[%dm",color);
         }
-        void set_color(const char *color, int len, bool is_fg) {
-          if (strncmp("red", color, len) == 0) {
-            is_fg ? set_color(31) : set_color(41);
-          } else if (strncmp("green", color, len) == 0) {
-            is_fg ? set_color(32) : set_color(42);
-          } else if (strncmp("blue", color, len) == 0) {
-            is_fg ? set_color(34) : set_color(44);
+        void set_color(const char *bkcolor, int bklen, const char *fgcolor, int fglen) {
+          unsigned short color = 0;
+
+          if (strncmp("red", fgcolor, fglen) == 0) {
+            color |= 31;
+          } else if (strncmp("green", fgcolor, fglen) == 0) {
+            color |= 32;
+          } else if (strncmp("blue", fgcolor, fglen) == 0) {
+            color |= 34;
           }
+
+          set_color(color);
         }
         void rset_color() {
           printf("\033[0m");
@@ -74,13 +82,11 @@ namespace console {
     #endif
     static __sinit sinit_;
 
-    void set_color(const char *bkcolor, int bklen, const char *fgcolor, int fglen) {
-      if (bkcolor && bklen > 0)
-        sinit_.set_color(bkcolor, bklen, false);
-      if (fgcolor && fglen > 0)
-        sinit_.set_color(fgcolor, fglen, true);
+    static inline void set_color(const char *bkcolor, int bklen, const char *fgcolor, int fglen) {
+      if ( (bkcolor && bklen > 0) || (fgcolor && fglen > 0) )
+        sinit_.set_color(bkcolor, bklen, fgcolor, fglen);      
     }
-    void set_color_default() {
+    static inline void set_color_default() {
       sinit_.rset_color();
     }
 
@@ -142,6 +148,12 @@ namespace console {
     }
   } // end namespace __detail
 
+  /*
+    such as:
+      agile::console::print("this {red:is} a {green:color} {blue:text}!");
+    detail see:
+      test/console.cc
+  */
   void printf(const char *fmt, ...) {
     va_list arg;
     va_start(arg, fmt);
