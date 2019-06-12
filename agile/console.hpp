@@ -103,8 +103,8 @@ namespace console {
           if (*(p + 1) != '{') {
             opened = true;
             colored = false;
-            color = p;
             ++p;
+            color = p;
             continue;
           }
         }
@@ -114,7 +114,11 @@ namespace console {
             len = p - color;
           } else if (*p == ':') {
             colored = true;
-            set_color(color, len, color + len + 1, p - color - len - 1);
+            if (len > 0) {
+              set_color(color, len, color + len + 1, p - color - len - 1);
+            } else {
+              set_color(nullptr, 0, color, p - color);
+            }
           }
         } else {
           if (*p == '{' && (*(p+1) == '{')) {
