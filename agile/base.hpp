@@ -17,7 +17,9 @@
 #include "osplatformutil.h"
 
 #ifdef I_OS_WIN
-#include <windows.h>
+  #include <windows.h>
+#else
+  #include <unistd.h>
 #endif
 
 namespace agile {
@@ -31,13 +33,19 @@ namespace base {
 	}
 
   bool module_file_name(std::string &file_name) {
+    char buf[1024] = { 0 };
+
     #ifdef I_OS_WIN
-      char buf[512] = {0};
-      if (::GetModuleFileNameA(::GetModuleHandleA(0), buf, 512)) {
+      if (::GetModuleFileNameA(::GetModuleHandleA(0), buf, sizeof(buf))) {
         file_name = buf;
         return true;
       }
     #else
+      int len = readlink("/proc/self/exe", buf, sizeof(buf));
+      if (len > 0 && len < sizeof(buf)) {
+        file_name = buf;
+        return true;
+      }
     #endif
   
     file_name.clear();
