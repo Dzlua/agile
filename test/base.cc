@@ -41,7 +41,17 @@ void test_radian_degrees() {
   AG_TEST_END();
 }
 
+void test_module_file_name() {
+  agile::console::print("\n----- test module file name -----");
+
+  std::string module_file_name;
+  agile::base::module_file_name(module_file_name);
+  agile::console::print("module file path is {green:%s}"
+    , module_file_name.c_str());
+}
+
 int main(int argc, char **argv) {
   test_radian_degrees();
+  test_module_file_name();
   return 0;
 }

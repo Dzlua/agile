@@ -12,17 +12,13 @@
 #ifndef AGILE_CONSOLE_HPP_
 #define AGILE_CONSOLE_HPP_
 
-#include "osplatformutil.h"
-
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
 
 #include <mutex>
 
-#ifdef I_OS_WIN
-#include <windows.h>
-#endif
+#include "agile/base.hpp"
 
 namespace agile {
 namespace console {
@@ -206,8 +202,8 @@ namespace console {
   */
   void log(const char *fmt, ...) {
     static char msg[2048];
-    static char logfn[512] = {0};
    	static char *extname = ".log";
+    static std::string logfn;
 
     static std::mutex mtx;
 
@@ -219,21 +215,17 @@ namespace console {
 	  msg[2047] = '\0';
     va_end(arg);
 
-    if (!logfn[0]) {
-      #ifdef I_OS_WIN
-        if (!GetModuleFileNameA(GetModuleHandleA(0), logfn
-          , (DWORD)(sizeof(logfn) - (strlen(extname) + 1))) ) {
-          return;
-        }
-        if (!logfn[0]) {
-          return;
-        }
-      #else
-      #endif
-      strcat(logfn, extname);
+    if (logfn.empty()) {
+      std::string file_name;
+      if (base::module_file_name(file_name)) {
+        logfn = file_name + extname;
+      }
+
+      if (logfn.empty())
+        return;
     }
 
-    FILE *fp = ::fopen(logfn, "a+");
+    FILE *fp = ::fopen(logfn.c_str(), "a+");
     if (fp) {
       ::fprintf(fp, "[time] %s\n", msg);
       ::fclose(fp);
