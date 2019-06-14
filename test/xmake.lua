@@ -4,6 +4,10 @@ target("console")
   add_includedirs("..")
   add_includedirs("../third/OSPlatformUtil/src")
 
+  if not is_os("windows") then
+    add_links("pthread")
+  end
+
   set_kind("binary")
   
   add_files("console.cc")
