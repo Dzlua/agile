@@ -180,6 +180,8 @@ namespace console {
   /*
     such as:
       agile::console::print("this {red:is} a {green:color} {blue:text}!");
+    suport color:
+      black,red,green,blue,cyan,white
     detail see:
       test/console.cc
   */
